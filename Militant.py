@@ -5,7 +5,9 @@ import os
 
 #Initialization
 pygame.init()
-DISPLAYSURF = pygame.display.set_mode((800,600))
+firstBootScreen = pygame.image.load("Worldmap.png")
+DISPLAYSURF = pygame.display.set_mode(firstBootScreen.get_size())
+firstBootScreen = pygame.image.load("Worldmap.png").convert()
 pygame.display.set_caption("Militant, the Game")
 background = pygame.Surface(DISPLAYSURF.get_size()).convert()
 background.fill((255,255,255))
@@ -19,6 +21,11 @@ Africa = {"damage":70, "mobility":20, "health":80, "defense":40, "gold":70, "sco
 SouthAmerica = {"damage":80, "mobility":40, "health":80, "defense":70, "gold":90, "scorepoints":100}
 Europe = {"damage":90, "mobility":50, "health":90, "defense":80, "gold":95, "scorepoints":145}
 NorthAmerica = {"damage":100, "mobility":80, "health":100, "defense":80, "gold":95, "scorepoints":145}
+
+#boot screen information
+firstBootScreen_rect = firstBootScreen.get_rect()
+background.blit(firstBootScreen, (0,0))
+pygame.display.flip()
 
 while True:
     for event in pygame.event.get():
