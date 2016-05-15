@@ -8,20 +8,33 @@ def ally_allocation(country, countryName, damageAdded, mobilityAdded, healthAdde
     #Sets the status of a country to ally if it can be afforded
     allyCost = country["allycost"]
     playerGold = playerStat["gold"]
-    allytextScreen = pygame.image.load("greyRectangle.jpeg").convert()
-    DISPLAYSURF.blit(allytextScreen, (300, 430))
-    msg = "are you sure you want become allies with {0} for {1} gold coins?".format(countryName, country["allycost"])
-    screenText = allyScreenTextFont.render(msg, True, (255, 255, 255))
-    DISPLAYSURF.blit(screenText, (320, 440))
-    if allyCost < playerGold:
-        country["ally"] = True
-        playerStat["gold"] -= country["allycost"]   #decrease the player's gold amount by the ally cost amount
-        playerStat["damage"] += damageAdded         #Increase defense
-        playerStat["mobility"] += mobilityAdded     #Increase mobility
-        playerStat["health"] += healthAdded         #Increase health
-        playerStat["defense"] += defenseAdded       #Increase defense
-    else:
-        country["ally"] = False
+    allyTicker = True
+    if allyTicker == True:   #To time the amount of time the rectangular option box shows
+        allyTextScreen = pygame.image.load("greyRectangle.jpg").convert()
+        DISPLAYSURF.blit(allyTextScreen, (300, 430))
+        allyMsg = "are you sure you want become allies with {0} for {1} gold coins?".format(countryName, country["allycost"])
+        screenText = allyScreenTextFont.render(allyMsg, True, (255, 255, 255))
+        DISPLAYSURF.blit(screenText, (320, 440))
+        checkButton = pygame.image.load("checkButton.png").convert()
+        xButton = pygame.image.load("xButton.jpeg").convert()
+        DISPLAYSURF.blit(checkButton, (360, 490))
+        DISPLAYSURF.blit(xButton, (520, 490))    
+        if ((360 + check_Button_Length) > pos[0] > 360) and ((490 + check_Button_Width) > pos[1] > 490):
+            if allyCost < playerGold:
+                country["ally"] = True
+                playerStat["gold"] -= country["allycost"]   #decrease the player's gold amount by the ally cost amount
+                playerStat["damage"] += damageAdded         #Increase defense
+                playerStat["mobility"] += mobilityAdded     #Increase mobility
+                playerStat["health"] += healthAdded         #Increase health
+                playerStat["defense"] += defenseAdded       #Increase defense
+                allyTicker = False
+            else:
+                insufficientFundsMessage = "You do not have enough gold for this ally"
+                insufficientFundsText = allyScreenTextFont.render(insufficientFundsMessage, True, (255, 255, 255))
+                DISPLAYSURF.blit(insufficientFundsText, (320, 510))
+        elif ((520 + x_Button_Length) > pos[0] > 520) and ((490 + x_Button_Width) > pos[1] > 490):
+            country["ally"] = False
+            allyTicker = False
 
 def enemy_allocation(country):
     #Sets the status of a country to enemy
@@ -37,7 +50,13 @@ DISPLAYSURF.blit(startingscreen, (0, 0))
 pygame.display.flip()
 
 #font
-allyScreenTextFont = pygame.font.SysFont(None, 20)
+allyScreenTextFont = pygame.font.SysFont(None, 15)
+
+#x and check button dimensions
+x_Button_Length = pygame.image.load("xButton.jpeg").get_rect().size[0]
+x_Button_Width = pygame.image.load("xButton.jpeg").get_rect().size[1]
+check_Button_Length = pygame.image.load("checkButton.png").get_rect().size[0]
+check_Button_Width = pygame.image.load("checkButton.png").get_rect().size[1]
 
 #ally button dimensions
 ally_Button_Length = pygame.image.load("allybutton.jpg").get_rect().size[0]
@@ -51,7 +70,7 @@ enemy_Button_Width = pygame.image.load("attackbutton.png").get_rect().size[1]
 MiddleEast = {"damage": 20, "mobility": 15, "health": 50, "defense": 20, "gold": 20, "scorepoints": 50, "enemy": False, "ally": False, "allycost": 80}
 Australia = {"damage": 40, "mobility": 25, "health": 60, "defense": 30, "gold": 40, "scorepoints": 60, "enemy": False, "ally": False, "allycost": 60}
 Asia = {"damage": 50, "mobility": 30, "health":70, "defense":40, "gold":60, "scorepoints":100, "enemy": False, "ally": False, "allycost": 40}
-Africa = {"damage": 70, "mobility": 20, "health":80, "defense":40, "gold":70, "scorepoints":100, "enemy": False, "ally": False, "allycost": 20}
+Africa = {"damage": 70, "mobility": 20, "health":80, "defense":40, "gold":70, "scorepoints":100, "enemy": False, "ally": False, "allycost": 60}
 SouthAmerica = {"damage":80, "mobility": 40, "health": 80, "defense": 70, "gold": 90, "scorepoints": 100, "enemy": False, "ally": False, "allycost": 100}
 Europe = {"damage": 90, "mobility": 50, "health": 90, "defense": 80, "gold": 95, "scorepoints": 145, "enemy": False, "ally": False, "allycost": 100}
 NorthAmerica = {"damage": 100, "mobility": 80, "health": 100, "defense": 80, "gold": 95, "scorepoints": 145, "enemy": False, "ally": False, "allycost": 150}
