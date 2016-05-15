@@ -18,8 +18,11 @@ def ally_allocation(country, countryName, damageAdded, mobilityAdded, healthAdde
         checkButton = pygame.image.load("checkButton.png").convert()
         xButton = pygame.image.load("xButton.jpeg").convert()
         DISPLAYSURF.blit(checkButton, (360, 490))
-        DISPLAYSURF.blit(xButton, (520, 490))    
+        DISPLAYSURF.blit(xButton, (520, 490))
+        pos = pygame.mouse.get_pos()
+        pygame.display.update()
         if ((360 + check_Button_Length) > pos[0] > 360) and ((490 + check_Button_Width) > pos[1] > 490):
+            print(allyTicker)
             if allyCost < playerGold:
                 country["ally"] = True
                 playerStat["gold"] -= country["allycost"]   #decrease the player's gold amount by the ally cost amount
@@ -28,13 +31,15 @@ def ally_allocation(country, countryName, damageAdded, mobilityAdded, healthAdde
                 playerStat["health"] += healthAdded         #Increase health
                 playerStat["defense"] += defenseAdded       #Increase defense
                 allyTicker = False
+                pygame.display.update()
             else:
                 insufficientFundsMessage = "You do not have enough gold for this ally"
                 insufficientFundsText = allyScreenTextFont.render(insufficientFundsMessage, True, (255, 255, 255))
                 DISPLAYSURF.blit(insufficientFundsText, (320, 510))
+                pygame.display.update()
         elif ((520 + x_Button_Length) > pos[0] > 520) and ((490 + x_Button_Width) > pos[1] > 490):
-            country["ally"] = False
             allyTicker = False
+            pygame.display.update()
 
 def enemy_allocation(country):
     #Sets the status of a country to enemy
@@ -68,7 +73,7 @@ enemy_Button_Width = pygame.image.load("attackbutton.png").get_rect().size[1]
 
 #Information about the different countries
 MiddleEast = {"damage": 20, "mobility": 15, "health": 50, "defense": 20, "gold": 20, "scorepoints": 50, "enemy": False, "ally": False, "allycost": 80}
-Australia = {"damage": 40, "mobility": 25, "health": 60, "defense": 30, "gold": 40, "scorepoints": 60, "enemy": False, "ally": False, "allycost": 60}
+Australia = {"damage": 40, "mobility": 25, "health": 60, "defense": 30, "gold": 40, "scorepoints": 60, "enemy": False, "ally": False, "allycost": 30}
 Asia = {"damage": 50, "mobility": 30, "health":70, "defense":40, "gold":60, "scorepoints":100, "enemy": False, "ally": False, "allycost": 40}
 Africa = {"damage": 70, "mobility": 20, "health":80, "defense":40, "gold":70, "scorepoints":100, "enemy": False, "ally": False, "allycost": 60}
 SouthAmerica = {"damage":80, "mobility": 40, "health": 80, "defense": 70, "gold": 90, "scorepoints": 100, "enemy": False, "ally": False, "allycost": 100}
