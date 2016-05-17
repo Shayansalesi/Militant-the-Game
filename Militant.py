@@ -199,20 +199,115 @@ while True:
                         greyRectangleMiddleEast = False
                         
                 #Ally status allocation for Asia 
-                elif ((660 + ally_Button_Length) > pos[0] > 660) and ((120 + ally_Button_Width) > pos[1] > 120):
-                    ally_allocation(Asia, "Asia", 15, 10, 20, 10)
+                elif ((660 + ally_Button_Length) > pos[0] > 660) and ((120 + ally_Button_Width) > pos[1] > 120):      
+                    ally_allocation("Asia", Asia)
+                    greyRectangleAsia = ally_allocation("Asia", Asia)
+                elif greyRectangleAsia == True:
+                    if ((360 + check_Button_Length) > pos[0] > 360) and ((490 + check_Button_Width) > pos[1] > 490):
+                        ally_allocation_confirm(Asia)
+                        allyCapability = ally_allocation_confirm(Asia)
+                        if allyCapability == True:
+                            print(playerStat)
+                            ally_allocation_execute(Asia, "Asia", 15, 10, 20, 10)
+                            print(playerStat)
+                            greyRectangleAsia = False
+                            mainGameScreen()
+                        elif allyCapability == False:
+                            print("Insufficient funds for this ally")
+                            greyRectangleAsia = False
+                            mainGameScreen()
+                    elif ((520 + x_Button_Length) > pos[0] > 520) and ((490 + x_Button_Width) > pos[1] > 490):
+                        mainGameScreen()
+                        greyRectangleAsia = False
+                   
                 #Ally status allocation for Australia
-                elif ((810 + ally_Button_Length) > pos[0] > 810) and ((375 + ally_Button_Width) > pos[1] > 375):
-                    ally_allocation(Australia, "Australia", 10, 10, 20, 10)  
+                elif ((810 + ally_Button_Length) > pos[0] > 810) and ((375 + ally_Button_Width) > pos[1] > 375):      
+                    ally_allocation("Australia", Australia)
+                    greyRectangleAustralia = ally_allocation("Australia", Australia)
+                elif greyRectangleAustralia == True:
+                    if ((360 + check_Button_Length) > pos[0] > 360) and ((490 + check_Button_Width) > pos[1] > 490):
+                        ally_allocation_confirm(Australia)
+                        allyCapability = ally_allocation_confirm(Australia)
+                        if allyCapability == True:
+                            print(playerStat)
+                            ally_allocation_execute(Australia, "Australia", 10, 10, 20, 10)
+                            print(playerStat)
+                            greyRectangleAustralia = False
+                            mainGameScreen()
+                        elif allyCapability == False:
+                            print("Insufficient funds for this ally")
+                            greyRectangleAustralia = False
+                            mainGameScreen()
+                    elif ((520 + x_Button_Length) > pos[0] > 520) and ((490 + x_Button_Width) > pos[1] > 490):
+                        mainGameScreen()
+                        greyRectangleAustralia = False
+                    
                 #Ally status allocation for South America
-                elif ((265 + ally_Button_Length) > pos[0] > 265) and ((330 + ally_Button_Width) > pos[1] > 330):
-                    ally_allocation(SouthAmerica, "South America", 30, 10, 30, 20)  
+                elif ((265 + ally_Button_Length) > pos[0] > 265) and ((330 + ally_Button_Width) > pos[1] > 330): 
+                    ally_allocation("South America", SouthAmerica)
+                    greyRectangleSouthAmerica = ally_allocation("South America", SouthAmerica)
+                elif greyRectangleSouthAmerica == True:
+                    if ((360 + check_Button_Length) > pos[0] > 360) and ((490 + check_Button_Width) > pos[1] > 490):
+                        ally_allocation_confirm(SouthAmerica)
+                        allyCapability = ally_allocation_confirm(SouthAmerica)
+                        if allyCapability == True:
+                            print(playerStat)
+                            ally_allocation_execute(SouthAmerica, "South America", 30, 10, 30, 20)
+                            print(playerStat)
+                            greyRectangleSouthAmerica = False
+                            mainGameScreen()
+                        elif allyCapability == False:
+                            print("Insufficient funds for this ally")
+                            greyRectangleSouthAmerica = False
+                            mainGameScreen()
+                    elif ((520 + x_Button_Length) > pos[0] > 520) and ((490 + x_Button_Width) > pos[1] > 490):
+                        mainGameScreen()
+                        greyRectangleSouthAmerica = False
+                    
                 #Ally status allocation for North America
-                elif ((150 + ally_Button_Length) > pos[0] > 150) and ((165 + ally_Button_Width) > pos[1] > 165):
-                    ally_allocation(NorthAmerica, "North America", 50, 40, 50, 40)  
+                elif ((150 + ally_Button_Length) > pos[0] > 150) and ((165 + ally_Button_Width) > pos[1] > 165):   
+                    ally_allocation("North America", NorthAmerica)
+                    greyRectangleSouthAmerica = ally_allocation("North America", NorthAmerica)
+                elif greyRectangleNorthAmerica == True:
+                    if ((360 + check_Button_Length) > pos[0] > 360) and ((490 + check_Button_Width) > pos[1] > 490):
+                        ally_allocation_confirm(NorthAmerica)
+                        allyCapability = ally_allocation_confirm(NorthAmerica)
+                        if allyCapability == True:
+                            print(playerStat)
+                            ally_allocation_execute(NorthAmerica, "North America", 50, 40, 50, 40)
+                            print(playerStat)
+                            greyRectangleNorthAmerica = False
+                            mainGameScreen()
+                        elif allyCapability == False:
+                            print("Insufficient funds for this ally")
+                            greyRectangleNorthAmerica = False
+                            mainGameScreen()
+                    elif ((520 + x_Button_Length) > pos[0] > 520) and ((490 + x_Button_Width) > pos[1] > 490):
+                        mainGameScreen()
+                        greyRectangleNorthAmerica = False
+                    
                 #Ally status allocation for Europe
-                elif ((510 + ally_Button_Length) > pos[0] > 510) and ((125 + ally_Button_Width) > pos[1] > 125):
-                    ally_allocation(Europe, "Europe", 40, 30, 40, 30)  
+                elif ((510 + ally_Button_Length) > pos[0] > 510) and ((125 + ally_Button_Width) > pos[1] > 125):   
+                    ally_allocation("Europe", Europe)
+                    greyRectangleEurope = ally_allocation("Europe", Europe)
+                elif greyRectangleEurope == True:
+                    if ((360 + check_Button_Length) > pos[0] > 360) and ((490 + check_Button_Width) > pos[1] > 490):
+                        ally_allocation_confirm(Europe)
+                        allyCapability = ally_allocation_confirm(Europe)
+                        if allyCapability == True:
+                            print(playerStat)
+                            ally_allocation_execute(Europe, "Europe", 40, 30, 40, 30)
+                            print(playerStat)
+                            greyRectangleEurope = False
+                            mainGameScreen()
+                        elif allyCapability == False:
+                            print("Insufficient funds for this ally")
+                            greyRectangleEurope = False
+                            mainGameScreen()
+                    elif ((520 + x_Button_Length) > pos[0] > 520) and ((490 + x_Button_Width) > pos[1] > 490):
+                        mainGameScreen()
+                        greyRectangleEurope = False
+                    
                 ###########################################################################
 
                 ############################  ENEMY ALLOCATION  ###########################
