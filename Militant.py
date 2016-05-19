@@ -1,4 +1,4 @@
-import pygame                                         #### REMOVE MOBILITY ON COUNTRIES
+import pygame                                         #### REMOVE MOBILITY ON COUNTRIES; add enemy costs to all country dictionaries
 from pygame.locals import *    
 import sys
 import os
@@ -28,12 +28,12 @@ def ally_allocation_confirm(country):
         allyCapability = False
     return allyCapability
 
-def ally_allocation_execute(country, countryName, damageAdded, mobilityAdded, healthAdded, defenseAdded):
+def ally_allocation_execute(country, countryName, damageAdded, healthAdded, defenseAdded):
     "Execution of ally status; perks vary depending on country"
     country["ally"] = True
+    country["enemy"] = False
     playerStat["gold"] -= country["allycost"]   #decrease the player's gold amount by the ally cost amount
     playerStat["damage"] += damageAdded         #Increase defense
-    playerStat["mobility"] += mobilityAdded     #Increase mobility
     playerStat["health"] += healthAdded         #Increase health
     playerStat["defense"] += defenseAdded       #Increase defense
     
@@ -59,7 +59,7 @@ def enemy_allocation(countryName, country):
     greyRectangle = True
     return greyRectangle
 
-def ally_allocation_confirm(country):
+def enemy_allocation_confirm(country):
     "Confirmation of enemy status; checks if the player has enough gold to afford the enemy"
     enemyCost = country["enemycost"]
     playerGold = playerStat["gold"]
@@ -68,6 +68,18 @@ def ally_allocation_confirm(country):
     elif enemyCost > playerGold:
         enemyCapability = False
     return enemyCapability
+
+def enemy_allocation_execute(country):
+    "Attacks the designated country; decreases enemys defense and health by the players attack amount"
+    if country["damage"] > playerStat["defense"]:
+        damageFloodtoHealth = country["damage"] - playerStat["defense"]
+        playerStat["defense"] = 0
+        playerStat["health"] -= damageFloodtoHealth
+    else:
+        playerStat["defense"] -= country["damage"]
+    playerStat["gold"] -= country["enemycost"]
+    country["ally"] = False
+    country["enemy"] = True
 
 def mainGameScreen():
     "Draws the main game screen to the display surface"
@@ -108,7 +120,22 @@ def mainGameScreen():
     DISPLAYSURF.blit(Enemy_Button_NorthAmerica, (110, 165))
     Enemy_Button_Europe = pygame.image.load("attackbutton.png").convert()
     DISPLAYSURF.blit(Enemy_Button_Europe, (470, 125))
+
+    #draws the stats box to the screen
+    playerStatBox = pygame.image.load("playerStatBox.gif").convert()
+    DISPLAYSURF.blit(playerStatBox, (730, 450))
     return background_variable
+
+def game_lose():
+    "Draws a rectangle to the screen saying the player has lost the game"
+    greyRectangle_game_lose = pygame.image.load("greyRectangle.jpg").convert()
+    DISPLAYSURF.blit(greyRectangle_game_lose, (300, 200))
+    game_lose_msg = "You lose"
+    game_lose_Text = game_lose_ScreenTextFont.render(game_lose_msg, True, (0, 0, 0))
+    DISPLAYSURF.blit(game_lose_Text, (410, 250))
+    game_lose_line2_msg = "Press the exit button to quit the game"
+    game_lose_line2_Text = game_lose_ScreenTextFont.render(game_lose_line2_msg, True, (0, 0, 0))
+    DISPLAYSURF.blit(game_lose_line2_Text, (300, 270))
 
 ##############################################################################
 
@@ -124,6 +151,7 @@ pygame.display.flip()
 #fonts
 allyScreenTextFont = pygame.font.SysFont(None, 15)
 enemyScreenTextFont = pygame.font.SysFont(None, 15)
+game_lose_ScreenTextFont = pygame.font.SysFont(None, 25)
 
 #x and check button dimensions
 x_Button_Length = pygame.image.load("xButton.jpeg").get_rect().size[0]
@@ -140,16 +168,16 @@ enemy_Button_Length = pygame.image.load("attackbutton.png").get_rect().size[0]
 enemy_Button_Width = pygame.image.load("attackbutton.png").get_rect().size[1]
 
 #Information about the different countries
-MiddleEast = {"damage": 20, "mobility": 15, "health": 50, "defense": 20, "gold": 20, "scorepoints": 50, "enemy": False, "ally": False, "allycost": 80}
-Australia = {"damage": 40, "mobility": 25, "health": 60, "defense": 30, "gold": 40, "scorepoints": 60, "enemy": False, "ally": False, "allycost": 30}
-Asia = {"damage": 50, "mobility": 30, "health":70, "defense":40, "gold":60, "scorepoints":100, "enemy": False, "ally": False, "allycost": 40}
-Africa = {"damage": 70, "mobility": 20, "health":80, "defense":40, "gold":70, "scorepoints":100, "enemy": False, "ally": False, "allycost": 30, "enemycost": 10}
-SouthAmerica = {"damage":80, "mobility": 40, "health": 80, "defense": 70, "gold": 90, "scorepoints": 100, "enemy": False, "ally": False, "allycost": 100}
-Europe = {"damage": 90, "mobility": 50, "health": 90, "defense": 80, "gold": 95, "scorepoints": 145, "enemy": False, "ally": False, "allycost": 100}
-NorthAmerica = {"damage": 100, "mobility": 80, "health": 100, "defense": 80, "gold": 95, "scorepoints": 145, "enemy": False, "ally": False, "allycost": 150}
+MiddleEast = {"damage": 20, "health": 50, "defense": 20, "gold": 20, "scorepoints": 50, "enemy": False, "ally": False, "allycost": 80}
+Australia = {"damage": 40, "health": 60, "defense": 30, "gold": 40, "scorepoints": 60, "enemy": False, "ally": False, "allycost": 30}
+Asia = {"damage": 50, "health":70, "defense":40, "gold":60, "scorepoints":100, "enemy": False, "ally": False, "allycost": 40}
+Africa = {"damage": 70, "health":80, "defense":40, "gold":70, "scorepoints":100, "enemy": False, "ally": False, "allycost": 30, "enemycost": 10}
+SouthAmerica = {"damage":80, "health": 80, "defense": 70, "gold": 90, "scorepoints": 100, "enemy": False, "ally": False, "allycost": 100}
+Europe = {"damage": 90, "health": 90, "defense": 80, "gold": 95, "scorepoints": 145, "enemy": False, "ally": False, "allycost": 100}
+NorthAmerica = {"damage": 100, "health": 100, "defense": 80, "gold": 95, "scorepoints": 145, "enemy": False, "ally": False, "allycost": 150}
 
 #Information about the player
-playerStat = {"damage": 40, "mobility": 40, "health": 40, "defense": 40, "gold": 50, "scorepoints": 0}
+playerStat = {"damage": 40, "health": 40, "defense": 40, "gold": 50, "scorepoints": 0}
 
 #clock information
 clock = pygame.time.Clock()
@@ -170,10 +198,11 @@ while True:
             mainGameScreen()
             initial_Variable += 1
 
-        elif initial_Variable == 1:         
+        elif initial_Variable == 1:
             #events for mouse events
             if event.type == MOUSEBUTTONDOWN:
                 pos = pygame.mouse.get_pos()
+                
                 ############################  ALLY ALLOCATION  ############################
                 
                 #Ally status allocation for Africa
@@ -186,7 +215,7 @@ while True:
                         allyCapability = ally_allocation_confirm(Africa)
                         if allyCapability == True:
                             print(playerStat)
-                            ally_allocation_execute(Africa, "Africa", 20, 0, 10, 10)
+                            ally_allocation_execute(Africa, "Africa", 20, 10, 10)
                             print(playerStat)
                             greyRectangleAfrica_Ally = False
                             mainGameScreen()
@@ -208,7 +237,7 @@ while True:
                         allyCapability = ally_allocation_confirm(MiddleEast)
                         if allyCapability == True:
                             print(playerStat)
-                            ally_allocation_execute(MiddleEast, "the Middle East", 0, 5, 20, 5)
+                            ally_allocation_execute(MiddleEast, "the Middle East", 0, 20, 5)
                             print(playerStat)
                             greyRectangleMiddleEast_Ally = False
                             mainGameScreen()
@@ -230,7 +259,7 @@ while True:
                         allyCapability = ally_allocation_confirm(Asia)
                         if allyCapability == True:
                             print(playerStat)
-                            ally_allocation_execute(Asia, "Asia", 15, 10, 20, 10)
+                            ally_allocation_execute(Asia, "Asia", 15, 20, 10)
                             print(playerStat)
                             greyRectangleAsia_Ally = False
                             mainGameScreen()
@@ -252,7 +281,7 @@ while True:
                         allyCapability = ally_allocation_confirm(Australia)
                         if allyCapability == True:
                             print(playerStat)
-                            ally_allocation_execute(Australia, "Australia", 10, 10, 20, 10)
+                            ally_allocation_execute(Australia, "Australia", 10, 20, 10)
                             print(playerStat)
                             greyRectangleAustralia_Ally = False
                             mainGameScreen()
@@ -274,7 +303,7 @@ while True:
                         allyCapability = ally_allocation_confirm(SouthAmerica)
                         if allyCapability == True:
                             print(playerStat)
-                            ally_allocation_execute(SouthAmerica, "South America", 30, 10, 30, 20)
+                            ally_allocation_execute(SouthAmerica, "South America", 30, 30, 20)
                             print(playerStat)
                             greyRectangleSouthAmerica_Ally = False
                             mainGameScreen()
@@ -296,7 +325,7 @@ while True:
                         allyCapability = ally_allocation_confirm(NorthAmerica)
                         if allyCapability == True:
                             print(playerStat)
-                            ally_allocation_execute(NorthAmerica, "North America", 50, 40, 50, 40)
+                            ally_allocation_execute(NorthAmerica, "North America", 50, 50, 40)
                             print(playerStat)
                             greyRectangleNorthAmerica_Ally = False
                             mainGameScreen()
@@ -318,7 +347,7 @@ while True:
                         allyCapability = ally_allocation_confirm(Europe)
                         if allyCapability == True:
                             print(playerStat)
-                            ally_allocation_execute(Europe, "Europe", 40, 30, 40, 30)
+                            ally_allocation_execute(Europe, "Europe", 40, 40, 30)
                             print(playerStat)
                             greyRectangleEurope_Ally = False
                             mainGameScreen()
@@ -343,9 +372,11 @@ while True:
                         enemy_allocation_confirm(Africa)
                         enemyCapability = enemy_allocation_confirm(Africa)
                         if enemyCapability == True:
-                            print(playerStat)
-                            ally_allocation_execute(Asia, "Asia", 15, 10, 20, 10)
-                            print(playerStat)
+                            print("beginning player stat: ", playerStat)
+                            print("beginning enemy stat: ", Africa)
+                            enemy_allocation_execute(Africa)    #enemy_allocation_execute(Asia, "Asia", 15, 10, 20, 10)
+                            print("ending player stat: ", playerStat)
+                            print("ending enemy stat: ", Africa)
                             greyRectangleAfrica_Enemy = False
                             mainGameScreen()
                         elif enemyCapability == False:
@@ -373,8 +404,16 @@ while True:
                     enemy_allocation(NorthAmerica)  
                 #Enemy status allocation for Europe
                 elif ((470 + enemy_Button_Length) > pos[0] > 470) and ((125 + enemy_Button_Width) > pos[1] > 125):
-                    enemy_allocation(Europe) 
+                    enemy_allocation(Europe)
+                    
                 ###########################################################################
+
+            #Check if the player has lost the game
+            elif playerStat["health"] <= 0 :
+                game_lose()
+                if event.type == QUIT:
+                    pygame.display.quit()
+                    sys.exit()
 
             #If the player chooses to exit the game
             elif event.type == QUIT:
