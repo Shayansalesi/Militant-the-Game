@@ -22,7 +22,7 @@ def ally_allocation_confirm(country):
     "Confirmation of ally status; checks if the player has enough gold to afford the ally"
     allyCost = country["allycost"]
     playerGold = playerStat["gold"]
-    if allyCost < playerGold:
+    if allyCost <= playerGold:
         allyCapability = True
     elif allyCost > playerGold:
         allyCapability = False
@@ -58,6 +58,16 @@ def enemy_allocation(countryName, country):
     DISPLAYSURF.blit(xButton, (520, 490))
     greyRectangle = True
     return greyRectangle
+
+def ally_allocation_confirm(country):
+    "Confirmation of enemy status; checks if the player has enough gold to afford the enemy"
+    enemyCost = country["enemycost"]
+    playerGold = playerStat["gold"]
+    if enemyCost <= playerGold:
+        enemyCapability = True
+    elif enemyCost > playerGold:
+        enemyCapability = False
+    return enemyCapability
 
 def mainGameScreen():
     "Draws the main game screen to the display surface"
@@ -330,15 +340,15 @@ while True:
                     greyRectangleAfrica_Enemy = enemy_allocation("Africa", Africa)
                 elif greyRectangleAfrica_Enemy == True:
                     if ((360 + check_Button_Length) > pos[0] > 360) and ((490 + check_Button_Width) > pos[1] > 490):
-                        ally_allocation_confirm(Asia)
-                        allyCapability = ally_allocation_confirm(Asia)
-                        if allyCapability == True:
+                        enemy_allocation_confirm(Africa)
+                        enemyCapability = enemy_allocation_confirm(Africa)
+                        if enemyCapability == True:
                             print(playerStat)
                             ally_allocation_execute(Asia, "Asia", 15, 10, 20, 10)
                             print(playerStat)
                             greyRectangleAfrica_Enemy = False
                             mainGameScreen()
-                        elif allyCapability == False:
+                        elif enemyCapability == False:
                             print("Insufficient funds for this ally")
                             greyRectangleAfrica_Enemy = False
                             mainGameScreen()
