@@ -1,10 +1,11 @@
-import pygame                                         #### REMOVE MOBILITY ON COUNTRIES; add enemy costs to all country dictionaries
+import pygame                                         #### REMOVE MOBILITY ON COUNTRIES; add enemy costs to all country dictionaries; player does not yet attack enemy
 from pygame.locals import *    
 import sys
 import os
 
 ##################################  FUNCTIONS  ##################################
-def ally_allocation(countryName, country):
+
+def ally_allocation(countryName, country, damagetobeAdded, healthtobeAdded, defensetobeAdded):
     "draws all elements needed for ally allocation to the game screen"
     allyTextScreen = pygame.image.load("greyRectangle.jpg").convert()
     DISPLAYSURF.blit(allyTextScreen, (300, 430))
@@ -15,6 +16,23 @@ def ally_allocation(countryName, country):
     xButton = pygame.image.load("xButton.jpeg").convert()
     DISPLAYSURF.blit(checkButton, (360, 490))
     DISPLAYSURF.blit(xButton, (520, 490))
+    
+    #Draws the red ally stat box with perks to be added
+    allyStatBox = pygame.image.load("countryStatBox.gif").convert()
+    DISPLAYSURF.blit(allyStatBox, (0,470))
+    allyPerksMsg = "Ally Perks"
+    damageMsg = "Damage+: {0}".format(damagetobeAdded)
+    healthMsg = "Health+: {0}".format(healthtobeAdded)
+    defenseMsg = "Defense+: {0}".format(defensetobeAdded)
+    allyPerksMsg_Text = statBoxTextFont.render(allyPerksMsg, True, (0, 255, 0))
+    damageMsg_Text = statBoxTextFont.render(damageMsg, True, (0, 255, 0))
+    healthMsg_Text = statBoxTextFont.render(healthMsg, True, (0, 255, 0))
+    defenseMsg_Text = statBoxTextFont.render(defenseMsg, True, (0, 255, 0))
+    DISPLAYSURF.blit(allyPerksMsg_Text, (40, 480))
+    DISPLAYSURF.blit(damageMsg_Text, (10, 500))
+    DISPLAYSURF.blit(healthMsg_Text, (10, 520))
+    DISPLAYSURF.blit(defenseMsg_Text, (10, 540))
+    
     greyRectangle = True
     return greyRectangle
 
@@ -83,12 +101,12 @@ def enemy_allocation_execute(country):
 
 def mainGameScreen():
     "Draws the main game screen to the display surface"
+    #Main Game Screen
     mainGameScreen = pygame.image.load("Worldmap.gif")
     DISPLAYSURF = pygame.display.set_mode(mainGameScreen.get_size())
     mainGameScreen = mainGameScreen.convert()
     DISPLAYSURF.blit(mainGameScreen, (0, 0))
     background_variable = "mainGameScreen"
-
     #Ally button locations
     ally_Button_Africa = pygame.image.load("allybutton.jpg").convert()
     DISPLAYSURF.blit(ally_Button_Africa, (480, 240))
@@ -104,7 +122,6 @@ def mainGameScreen():
     DISPLAYSURF.blit(ally_Button_NorthAmerica, (150, 165))
     ally_Button_Europe = pygame.image.load("allybutton.jpg").convert()
     DISPLAYSURF.blit(ally_Button_Europe, (510, 125))
-
     #Enemy button locations
     Enemy_Button_Africa = pygame.image.load("attackbutton.png").convert()
     DISPLAYSURF.blit(Enemy_Button_Africa, (440, 240))
@@ -120,10 +137,23 @@ def mainGameScreen():
     DISPLAYSURF.blit(Enemy_Button_NorthAmerica, (110, 165))
     Enemy_Button_Europe = pygame.image.load("attackbutton.png").convert()
     DISPLAYSURF.blit(Enemy_Button_Europe, (470, 125))
-
     #draws the stats box to the screen
-    playerStatBox = pygame.image.load("playerStatBox.gif").convert()
-    DISPLAYSURF.blit(playerStatBox, (730, 450))
+    playerStatBox = pygame.image.load("playerStatBox.png").convert()
+    DISPLAYSURF.blit(playerStatBox, (700, 470))
+    #draws player stats onto stat box
+    damageMsg = "Damage: {0}".format(playerStat["damage"])
+    healthMsg = "Health: {0}".format(playerStat["health"])
+    defenseMsg = "Defense: {0}".format(playerStat["defense"])
+    goldMsg = "gold: {0}".format(playerStat["gold"])
+    damageMsg_Text = statBoxTextFont.render(damageMsg, True, (0, 255, 0))
+    healthMsg_Text = statBoxTextFont.render(healthMsg, True, (0, 255, 0))
+    defenseMsg_Text = statBoxTextFont.render(defenseMsg, True, (0, 255, 0))
+    goldMsg_Text = statBoxTextFont.render(goldMsg, True, (0, 255, 0))
+    DISPLAYSURF.blit(damageMsg_Text, (710, 480))
+    DISPLAYSURF.blit(healthMsg_Text, (710, 500))
+    DISPLAYSURF.blit(defenseMsg_Text, (710, 520))
+    DISPLAYSURF.blit(goldMsg_Text, (710, 540))
+                                   
     return background_variable
 
 def game_lose():
@@ -152,6 +182,7 @@ pygame.display.flip()
 allyScreenTextFont = pygame.font.SysFont(None, 15)
 enemyScreenTextFont = pygame.font.SysFont(None, 15)
 game_lose_ScreenTextFont = pygame.font.SysFont(None, 25)
+statBoxTextFont = pygame.font.SysFont(None, 20)
 
 #x and check button dimensions
 x_Button_Length = pygame.image.load("xButton.jpeg").get_rect().size[0]
@@ -207,8 +238,8 @@ while True:
                 
                 #Ally status allocation for Africa
                 if ((480 + ally_Button_Length) > pos[0] > 480) and ((240 + ally_Button_Width) > pos[1] > 240):
-                    ally_allocation("Africa", Africa)
-                    greyRectangleAfrica_Ally = ally_allocation("Africa", Africa)
+                    ally_allocation("Africa", Africa, 20, 10, 10)
+                    greyRectangleAfrica_Ally = ally_allocation("Africa", Africa, 20, 10, 10)
                 elif greyRectangleAfrica_Ally == True:                                   #Checks if returned value from function is true
                     if ((360 + check_Button_Length) > pos[0] > 360) and ((490 + check_Button_Width) > pos[1] > 490):
                         ally_allocation_confirm(Africa)
@@ -229,8 +260,8 @@ while True:
                         
                 #Ally status allocation for Middle East             
                 elif ((580 + ally_Button_Length) > pos[0] > 580) and ((185 + ally_Button_Width) > pos[1] > 185):
-                    ally_allocation("the Middle East", MiddleEast)
-                    greyRectangleMiddleEast_Ally = ally_allocation("the Middle East", MiddleEast)
+                    ally_allocation("the Middle East", MiddleEast, 0, 20, 5)
+                    greyRectangleMiddleEast_Ally = ally_allocation("the Middle East", MiddleEast, 0, 20, 5)
                 elif greyRectangleMiddleEast_Ally == True:
                     if ((360 + check_Button_Length) > pos[0] > 360) and ((490 + check_Button_Width) > pos[1] > 490):
                         ally_allocation_confirm(MiddleEast)
@@ -251,8 +282,8 @@ while True:
                         
                 #Ally status allocation for Asia 
                 elif ((660 + ally_Button_Length) > pos[0] > 660) and ((120 + ally_Button_Width) > pos[1] > 120):      
-                    ally_allocation("Asia", Asia)
-                    greyRectangleAsia_Ally = ally_allocation("Asia", Asia)
+                    ally_allocation("Asia", Asia, 15, 20, 10)
+                    greyRectangleAsia_Ally = ally_allocation("Asia", Asia, 15, 20, 10)
                 elif greyRectangleAsia_Ally == True:
                     if ((360 + check_Button_Length) > pos[0] > 360) and ((490 + check_Button_Width) > pos[1] > 490):
                         ally_allocation_confirm(Asia)
@@ -273,8 +304,8 @@ while True:
                    
                 #Ally status allocation for Australia
                 elif ((810 + ally_Button_Length) > pos[0] > 810) and ((375 + ally_Button_Width) > pos[1] > 375):      
-                    ally_allocation("Australia", Australia)
-                    greyRectangleAustralia_Ally = ally_allocation("Australia", Australia)
+                    ally_allocation("Australia", Australia, 10, 20, 10)
+                    greyRectangleAustralia_Ally = ally_allocation("Australia", Australia, 10, 20, 10)
                 elif greyRectangleAustralia_Ally == True:
                     if ((360 + check_Button_Length) > pos[0] > 360) and ((490 + check_Button_Width) > pos[1] > 490):
                         ally_allocation_confirm(Australia)
@@ -295,8 +326,8 @@ while True:
                     
                 #Ally status allocation for South America
                 elif ((265 + ally_Button_Length) > pos[0] > 265) and ((330 + ally_Button_Width) > pos[1] > 330): 
-                    ally_allocation("South America", SouthAmerica)
-                    greyRectangleSouthAmerica_Ally = ally_allocation("South America", SouthAmerica)
+                    ally_allocation("South America", SouthAmerica, 30, 30, 20)
+                    greyRectangleSouthAmerica_Ally = ally_allocation("South America", SouthAmerica, 30, 30, 20)
                 elif greyRectangleSouthAmerica_Ally == True:
                     if ((360 + check_Button_Length) > pos[0] > 360) and ((490 + check_Button_Width) > pos[1] > 490):
                         ally_allocation_confirm(SouthAmerica)
@@ -317,8 +348,8 @@ while True:
                     
                 #Ally status allocation for North America
                 elif ((150 + ally_Button_Length) > pos[0] > 150) and ((165 + ally_Button_Width) > pos[1] > 165):   
-                    ally_allocation("North America", NorthAmerica)
-                    greyRectangleSouthAmerica_Ally = ally_allocation("North America", NorthAmerica)
+                    ally_allocation("North America", NorthAmerica, 50, 50, 40)
+                    greyRectangleSouthAmerica_Ally = ally_allocation("North America", NorthAmerica, 50, 50, 40)
                 elif greyRectangleNorthAmerica_Ally == True:
                     if ((360 + check_Button_Length) > pos[0] > 360) and ((490 + check_Button_Width) > pos[1] > 490):
                         ally_allocation_confirm(NorthAmerica)
@@ -339,8 +370,8 @@ while True:
                     
                 #Ally status allocation for Europe
                 elif ((510 + ally_Button_Length) > pos[0] > 510) and ((125 + ally_Button_Width) > pos[1] > 125):   
-                    ally_allocation("Europe", Europe)
-                    greyRectangleEurope_Ally = ally_allocation("Europe", Europe)
+                    ally_allocation("Europe", Europe, 40, 40, 30)
+                    greyRectangleEurope_Ally = ally_allocation("Europe", Europe, 40, 40, 30)
                 elif greyRectangleEurope_Ally == True:
                     if ((360 + check_Button_Length) > pos[0] > 360) and ((490 + check_Button_Width) > pos[1] > 490):
                         ally_allocation_confirm(Europe)
