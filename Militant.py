@@ -102,7 +102,11 @@ def enemy_allocation_execute(country):
         country["health"] -= playerStat_DamageFloodtoHealth
     else:
         country["defense"] -= playerStat["damage"]                                  #executes code block if player has lower damage then the country's health
-            
+
+    if country["health"] <= 0:
+        playerStat["scorepoints"] += country["scorepoints"]                         #If the country is defeated, the scorepoints and gold rewards are added
+        playerStat["gold"] += country["gold"]
+                                             
     playerStat["gold"] -= country["enemycost"]
     country["ally"] = False
     country["enemy"] = True
@@ -157,14 +161,17 @@ def mainGameScreen():
     healthMsg = "Health: {0}".format(playerStat["health"])
     defenseMsg = "Defense: {0}".format(playerStat["defense"])
     goldMsg = "gold: {0}".format(playerStat["gold"])
+    scorePointsMsg = "ScorePoints: {0}".format(playerStat["scorepoints"])
     damageMsg_Text = statBoxTextFont.render(damageMsg, True, (0, 255, 0))
     healthMsg_Text = statBoxTextFont.render(healthMsg, True, (0, 255, 0))
     defenseMsg_Text = statBoxTextFont.render(defenseMsg, True, (0, 255, 0))
     goldMsg_Text = statBoxTextFont.render(goldMsg, True, (0, 255, 0))
+    scorePointsMsg_Text = statBoxTextFont.render(scorePointsMsg, True, (0, 255, 0))
     DISPLAYSURF.blit(damageMsg_Text, (710, 480))
     DISPLAYSURF.blit(healthMsg_Text, (710, 500))
     DISPLAYSURF.blit(defenseMsg_Text, (710, 520))
     DISPLAYSURF.blit(goldMsg_Text, (710, 540))
+    DISPLAYSURF.blit(scorePointsMsg_Text, (710, 560))
                                    
     return background_variable
 
@@ -212,7 +219,7 @@ enemy_Button_Width = pygame.image.load("attackbutton.png").get_rect().size[1]
 
 #Information about the different countries
 MiddleEast = {"damage": 20, "health": 50, "defense": 20, "gold": 20, "scorepoints": 50, "enemy": False, "ally": False, "allycost": 80, "enemycost": 10}
-Australia = {"damage": 40, "health": 60, "defense": 30, "gold": 40, "scorepoints": 60, "enemy": False, "ally": False, "allycost": 30, "enemycost": 10}
+Australia = {"damage": 40, "health": 60, "defense": 30, "gold": 80, "scorepoints": 60, "enemy": False, "ally": False, "allycost": 30, "enemycost": 10}
 Asia = {"damage": 50, "health":70, "defense":40, "gold":60, "scorepoints":100, "enemy": False, "ally": False, "allycost": 40, "enemycost": 10}
 Africa = {"damage": 70, "health":80, "defense":40, "gold":70, "scorepoints":100, "enemy": False, "ally": False, "allycost": 30, "enemycost": 10}
 SouthAmerica = {"damage":80, "health": 80, "defense": 70, "gold": 90, "scorepoints": 100, "enemy": False, "ally": False, "allycost": 100, "enemycost": 10}
