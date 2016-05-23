@@ -1,4 +1,7 @@
-import pygame                                         ####fix up csv files, add sound
+#Shayan Salesi
+#ICS3U1-01 summative project
+
+import pygame                                         
 from pygame.locals import *    
 import sys
 import os
@@ -278,13 +281,13 @@ enemy_Button_Length = pygame.image.load("attackbutton.png").get_rect().size[0]
 enemy_Button_Width = pygame.image.load("attackbutton.png").get_rect().size[1]
 
 #Information about the different countries
-MiddleEast = {"damage": 20, "health": 50, "defense": 20, "gold": 20, "scorepoints": 50, "enemy": False, "ally": False, "allycost": 80, "enemycost": 10}
+MiddleEast = {"damage": 20, "health": 50, "defense": 20, "gold": 50, "scorepoints": 50, "enemy": False, "ally": False, "allycost": 40, "enemycost": 10}
 Australia = {"damage": 40, "health": 60, "defense": 30, "gold": 80, "scorepoints": 60, "enemy": False, "ally": False, "allycost": 30, "enemycost": 10}
-Asia = {"damage": 50, "health":70, "defense":40, "gold":60, "scorepoints":100, "enemy": False, "ally": False, "allycost": 40, "enemycost": 10}
-Africa = {"damage": 70, "health":80, "defense":40, "gold":70, "scorepoints":100, "enemy": False, "ally": False, "allycost": 30, "enemycost": 10}
-SouthAmerica = {"damage":80, "health": 80, "defense": 70, "gold": 90, "scorepoints": 100, "enemy": False, "ally": False, "allycost": 100, "enemycost": 10}
-Europe = {"damage": 90, "health": 90, "defense": 80, "gold": 95, "scorepoints": 145, "enemy": False, "ally": False, "allycost": 100, "enemycost": 10}
-NorthAmerica = {"damage": 100, "health": 100, "defense": 80, "gold": 95, "scorepoints": 145, "enemy": False, "ally": False, "allycost": 150, "enemycost": 10}
+Asia = {"damage": 50, "health":70, "defense":40, "gold":70, "scorepoints":100, "enemy": False, "ally": False, "allycost": 20, "enemycost": 10}
+Africa = {"damage": 55, "health":80, "defense":40, "gold":70, "scorepoints":100, "enemy": False, "ally": False, "allycost": 30, "enemycost": 10}
+SouthAmerica = {"damage":60, "health": 80, "defense": 70, "gold": 90, "scorepoints": 100, "enemy": False, "ally": False, "allycost": 60, "enemycost": 10}
+Europe = {"damage": 65, "health": 90, "defense": 80, "gold": 95, "scorepoints": 145, "enemy": False, "ally": False, "allycost": 70, "enemycost": 10}
+NorthAmerica = {"damage": 60, "health": 80, "defense": 88, "gold": 95, "scorepoints": 145, "enemy": False, "ally": False, "allycost": 70, "enemycost": 10}
 
 #Information about the player
 playerStat = {"damage": 40, "health": 40, "defense": 40, "gold": 50, "scorepoints": 0}
@@ -313,6 +316,10 @@ load_game_country("AsiaData.csv", Asia)
 #highscore initialization
 highScore = 0
 load_highscore()
+
+#sound initialization
+pygame.mixer.music.load("MilitantSoundtrack.wav")
+pygame.mixer.music.play(-1, 0)
 
 while True:
     clock.tick(30)
@@ -654,8 +661,9 @@ while True:
                     #saves high score if applicable
                     if playerStat["scorepoints"] > highScore:
                         save_highscore()
-                    #quits game and takes away game screen
+                    #quits game and takes away game screen and stops music
                     pygame.display.quit()
+                    pygame.mixer.music.stop()
                     sys.exit()
 
             #If the player chooses to exit the game
@@ -674,6 +682,7 @@ while True:
                 if playerStat["scorepoints"] > highScore:
                     save_highscore()
                 pygame.display.quit()
+                pygame.mixer.music.stop()
                 sys.exit()
 
         #Update the game screen
