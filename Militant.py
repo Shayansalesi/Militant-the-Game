@@ -1,4 +1,7 @@
-import pygame                                         ####fix up csv files, add sound
+#Shayan Salesi
+#ICS3U1-01 summative project
+
+import pygame                                         
 from pygame.locals import *    
 import sys
 import os
@@ -54,11 +57,6 @@ def ally_allocation_execute(country, countryName, damageAdded, healthAdded, defe
     playerStat["damage"] += damageAdded         #Increase defense
     playerStat["health"] += healthAdded         #Increase health
     playerStat["defense"] += defenseAdded       #Increase defense
-    
-def ally_allocation_fail():                         # NOT NECESSARY######
-    insufficientFundsMessage = "You do not have enough gold for this ally"
-    insufficientFundsText = allyScreenTextFont.render(insufficientFundsMessage, True, (255, 255, 255))
-    DISPLAYSURF.blit(insufficientFundsText, (320, 510))
 
 def enemy_allocation(countryName, country):
     "draws all elements needed for enemy allocation to the game screen"
@@ -162,16 +160,19 @@ def mainGameScreen():
     defenseMsg = "Defense: {0}".format(playerStat["defense"])
     goldMsg = "gold: {0}".format(playerStat["gold"])
     scorePointsMsg = "ScorePoints: {0}".format(playerStat["scorepoints"])
+    highScoreMsg = "highScore: {0}".format(highScore)
     damageMsg_Text = statBoxTextFont.render(damageMsg, True, (0, 255, 0))
     healthMsg_Text = statBoxTextFont.render(healthMsg, True, (0, 255, 0))
     defenseMsg_Text = statBoxTextFont.render(defenseMsg, True, (0, 255, 0))
     goldMsg_Text = statBoxTextFont.render(goldMsg, True, (0, 255, 0))
     scorePointsMsg_Text = statBoxTextFont.render(scorePointsMsg, True, (0, 255, 0))
+    highScoreMsg_Text = statBoxTextFont.render(highScoreMsg, True, (0, 255, 0))
     DISPLAYSURF.blit(damageMsg_Text, (710, 480))
     DISPLAYSURF.blit(healthMsg_Text, (710, 500))
     DISPLAYSURF.blit(defenseMsg_Text, (710, 520))
     DISPLAYSURF.blit(goldMsg_Text, (710, 540))
     DISPLAYSURF.blit(scorePointsMsg_Text, (710, 560))
+    DISPLAYSURF.blit(highScoreMsg_Text, (710, 580))
                                    
     return background_variable
 
@@ -186,12 +187,11 @@ def game_lose():
     game_lose_line2_Text = game_lose_ScreenTextFont.render(game_lose_line2_msg, True, (0, 0, 0))
     DISPLAYSURF.blit(game_lose_line2_Text, (300, 270))
 
-def load_game_country(country):
-    readFile = open("countryData.csv", "r+")
+def load_game_country(fileName, country):
+    readFile = open(fileName, "r+")
     for line in readFile:
         splitLine = line.split(",")
         del splitLine[len(splitLine)-1]
-        print("splitLine: ", splitLine)
         country["health"] = int(splitLine[0])
         country["defense"] = int(splitLine[1])
     readFile.close()
@@ -201,7 +201,6 @@ def load_game_player():
     for line in readFile:
         splitLine = line.split(",")
         del splitLine[len(splitLine)-1]
-        print("splitLine: ", splitLine)
         playerStat["damage"] = int(splitLine[0])
         playerStat["health"] = int(splitLine[1])
         playerStat["defense"] = int(splitLine[2])
@@ -209,15 +208,14 @@ def load_game_player():
         playerStat["scorepoints"] = int(splitLine[4])
     readFile.close()
 
-def save_game_country(country):
-    writeFile = open("countryData.csv", "w+")
+def save_game_country(country, fileName, fileType):
+    writeFile = open(fileName, fileType)
     attributeList = [country["health"], country["defense"]]
     for attr in attributeList:
         attrStr = str(attr)
         writeFile.write(attrStr)
         writeFile.write(",")
     writeFile.close()
-    print("stats for {0} have been saved".format(country))
 
 def save_game_player():
     "saves the player's stats"
@@ -229,6 +227,27 @@ def save_game_player():
         writeFile.write(",")
     writeFile.close()
     print("The game has been saved")
+
+def load_highscore():
+    "loads the players high score"
+    readFile = open("highScore.csv", "r+")
+    for line in readFile:
+        splitLine = line.split(",")
+        highScore = int(splitLine[0])
+        print("The high score has been loaded")
+        print("high score: ", highScore)
+    readFile.close()
+    
+
+def save_highscore():
+    "Saves the player's high score"
+    highScore = playerStat["scorepoints"]
+    writeFile = open("highScore.csv", "w+")
+    highScoreStr = str(highScore)
+    writeFile.write(highScoreStr)
+    writeFile.write(",")
+    writeFile.close()
+    print("The high score has been saved")
 
 ##############################################################################
 
@@ -262,13 +281,13 @@ enemy_Button_Length = pygame.image.load("attackbutton.png").get_rect().size[0]
 enemy_Button_Width = pygame.image.load("attackbutton.png").get_rect().size[1]
 
 #Information about the different countries
-MiddleEast = {"damage": 20, "health": 50, "defense": 20, "gold": 20, "scorepoints": 50, "enemy": False, "ally": False, "allycost": 80, "enemycost": 10}
+MiddleEast = {"damage": 20, "health": 50, "defense": 20, "gold": 50, "scorepoints": 50, "enemy": False, "ally": False, "allycost": 40, "enemycost": 10}
 Australia = {"damage": 40, "health": 60, "defense": 30, "gold": 80, "scorepoints": 60, "enemy": False, "ally": False, "allycost": 30, "enemycost": 10}
-Asia = {"damage": 50, "health":70, "defense":40, "gold":60, "scorepoints":100, "enemy": False, "ally": False, "allycost": 40, "enemycost": 10}
-Africa = {"damage": 70, "health":80, "defense":40, "gold":70, "scorepoints":100, "enemy": False, "ally": False, "allycost": 30, "enemycost": 10}
-SouthAmerica = {"damage":80, "health": 80, "defense": 70, "gold": 90, "scorepoints": 100, "enemy": False, "ally": False, "allycost": 100, "enemycost": 10}
-Europe = {"damage": 90, "health": 90, "defense": 80, "gold": 95, "scorepoints": 145, "enemy": False, "ally": False, "allycost": 100, "enemycost": 10}
-NorthAmerica = {"damage": 100, "health": 100, "defense": 80, "gold": 95, "scorepoints": 145, "enemy": False, "ally": False, "allycost": 150, "enemycost": 10}
+Asia = {"damage": 50, "health":70, "defense":40, "gold":70, "scorepoints":100, "enemy": False, "ally": False, "allycost": 20, "enemycost": 10}
+Africa = {"damage": 55, "health":80, "defense":40, "gold":70, "scorepoints":100, "enemy": False, "ally": False, "allycost": 30, "enemycost": 10}
+SouthAmerica = {"damage":60, "health": 80, "defense": 70, "gold": 90, "scorepoints": 100, "enemy": False, "ally": False, "allycost": 60, "enemycost": 10}
+Europe = {"damage": 65, "health": 90, "defense": 80, "gold": 95, "scorepoints": 145, "enemy": False, "ally": False, "allycost": 70, "enemycost": 10}
+NorthAmerica = {"damage": 60, "health": 80, "defense": 88, "gold": 95, "scorepoints": 145, "enemy": False, "ally": False, "allycost": 70, "enemycost": 10}
 
 #Information about the player
 playerStat = {"damage": 40, "health": 40, "defense": 40, "gold": 50, "scorepoints": 0}
@@ -286,6 +305,21 @@ greyRectangleAfrica_Enemy, greyRectangleMiddleEast_Enemy, greyRectangleAsia_Enem
 
 #csv and save file initialization
 load_game_player()
+load_game_country("MiddleEastData.csv", MiddleEast)
+load_game_country("EuropeData.csv", Europe)
+load_game_country("NorthAmericaData.csv", NorthAmerica, )
+load_game_country("SouthAmericaData.csv", SouthAmerica)
+load_game_country("AfricaData.csv", Africa)
+load_game_country("AustraliaData.csv", Australia)
+load_game_country("AsiaData.csv", Asia)
+
+#highscore initialization
+highScore = 0
+load_highscore()
+
+#sound initialization
+pygame.mixer.music.load("MilitantSoundtrack.wav")
+pygame.mixer.music.play(-1, 0)
 
 while True:
     clock.tick(30)
@@ -606,18 +640,49 @@ while True:
             elif playerStat["health"] <= 0 or playerStat["gold"] <= 0:
                 game_lose()
                 if event.type == QUIT:
+                    #deletes player file
                     gameLostFileTruncate_player = open("playerData.csv", "w+")       #deletes previously saved configurations
                     gameLostFileTruncate_player.close()
-                    gameLostFileTruncate_country = open("countryData.csv", "w+")
-                    gameLostFileTruncate_country.close()
+                    #deletes country files
+                    gameLostFileTruncate_MiddleEast = open("MiddleEastData.csv", "w+")
+                    gameLostFileTruncate_MiddleEast.close()
+                    gameLostFileTruncate_Europe = open("EuropeData.csv", "w+")
+                    gameLostFileTruncate_Europe.close()
+                    gameLostFileTruncate_NorthAmerica = open("NorthAmericaData.csv", "w+")
+                    gameLostFileTruncate_NorthAmerica.close()
+                    gameLostFileTruncate_SouthAmerica = open("SouthAmericaData.csv", "w+")
+                    gameLostFileTruncate_SouthAmerica.close()
+                    gameLostFileTruncate_Africa = open("AfricaData.csv", "w+")
+                    gameLostFileTruncate_Africa.close()
+                    gameLostFileTruncate_Australia = open("AustraliaData.csv", "w+")
+                    gameLostFileTruncate_Australia.close()
+                    gameLostFileTruncate_Asia = open("AsiaData.csv", "w+")
+                    gameLostFileTruncate_Asia.close()
+                    #saves high score if applicable
+                    if playerStat["scorepoints"] > highScore:
+                        save_highscore()
+                    #quits game and takes away game screen and stops music
                     pygame.display.quit()
+                    pygame.mixer.music.stop()
                     sys.exit()
 
             #If the player chooses to exit the game
             elif event.type == QUIT:
+                #Saves player info to player file
                 save_game_player()
-                save_game_country(MiddleEast)
+                #Saves country info to country files
+                save_game_country(MiddleEast, "MiddleEastData.csv", "w+")
+                save_game_country(Europe, "EuropeData.csv", "w+")
+                save_game_country(NorthAmerica, "NorthAmericaData.csv", "w+")
+                save_game_country(SouthAmerica, "SouthAmericaData.csv", "w+")
+                save_game_country(Africa, "AfricaData.csv", "w+")
+                save_game_country(Australia, "AustraliaData.csv", "w+")
+                save_game_country(Asia, "AsiaData.csv", "w+")
+                #saves high score if applicable
+                if playerStat["scorepoints"] > highScore:
+                    save_highscore()
                 pygame.display.quit()
+                pygame.mixer.music.stop()
                 sys.exit()
 
         #Update the game screen
