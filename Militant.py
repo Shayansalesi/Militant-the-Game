@@ -160,19 +160,16 @@ def mainGameScreen():
     defenseMsg = "Defense: {0}".format(playerStat["defense"])
     goldMsg = "gold: {0}".format(playerStat["gold"])
     scorePointsMsg = "ScorePoints: {0}".format(playerStat["scorepoints"])
-    highScoreMsg = "highScore: {0}".format(highScore)
     damageMsg_Text = statBoxTextFont.render(damageMsg, True, (0, 255, 0))
     healthMsg_Text = statBoxTextFont.render(healthMsg, True, (0, 255, 0))
     defenseMsg_Text = statBoxTextFont.render(defenseMsg, True, (0, 255, 0))
     goldMsg_Text = statBoxTextFont.render(goldMsg, True, (0, 255, 0))
     scorePointsMsg_Text = statBoxTextFont.render(scorePointsMsg, True, (0, 255, 0))
-    highScoreMsg_Text = statBoxTextFont.render(highScoreMsg, True, (0, 255, 0))
     DISPLAYSURF.blit(damageMsg_Text, (710, 480))
     DISPLAYSURF.blit(healthMsg_Text, (710, 500))
     DISPLAYSURF.blit(defenseMsg_Text, (710, 520))
     DISPLAYSURF.blit(goldMsg_Text, (710, 540))
     DISPLAYSURF.blit(scorePointsMsg_Text, (710, 560))
-    DISPLAYSURF.blit(highScoreMsg_Text, (710, 580))
                                    
     return background_variable
 
